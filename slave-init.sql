@@ -1,0 +1,8 @@
+CHANGE REPLICATION SOURCE TO
+  SOURCE_HOST = 'mysql-m',
+  SOURCE_USER = 'replicator',
+  SOURCE_PASSWORD = 'replicator_password',
+  SOURCE_LOG_FILE = 'binlog.000002',
+  SOURCE_LOG_POS = 157;
+
+START REPLICA;

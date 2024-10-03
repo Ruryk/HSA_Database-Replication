@@ -1,4 +1,4 @@
-# HSA12  21. Database: Replication
+# HSA12 21. Database: Replication
 
 ## Set up MySQL Cluster
 

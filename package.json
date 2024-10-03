@@ -1,0 +1,15 @@
+{
+  "name": "hsa12-21.-database-replication",
+  "version": "1.0.0",
+  "description": "- Create 3 docker containers: mysql-m, mysql-s1, mysql-s2\r - Setup master slave replication (Master: mysql-m, Slave: mysql-s1, mysql-s2)\r - Write script that will frequently write data to database.\r - Ensure, that replication is working.\r - Try to turn off mysql-s1 (stop slave).\r - Try to remove a column in  database on slave node (try to delete last column and column from the middle).\r - Write conclusion in readme.md",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql2": "^3.11.3"
+  }
+}
