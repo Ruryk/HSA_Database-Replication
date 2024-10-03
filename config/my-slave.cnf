@@ -1,4 +1,0 @@
-[mysqld]
-tls_version=''
-relay-log=relay-bin
-relay-log-index=relay-bin.index

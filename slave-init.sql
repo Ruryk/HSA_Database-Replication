@@ -1,3 +1,5 @@
+STOP REPLICA;
+
 CHANGE REPLICATION SOURCE TO
   SOURCE_HOST = 'mysql-m',
   SOURCE_USER = 'replicator',

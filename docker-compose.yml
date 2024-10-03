@@ -1,5 +1,25 @@
 version: '3'
 services:
+  cert-gen:
+    image: alpine
+    volumes:
+      - ./certs:/certs  # Folder for saving certificates
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        apk add --no-cache openssl &&
+        # Generate a key and certificate for MySQL
+        openssl genpkey -algorithm RSA -out /certs/mysql.key -pkeyopt rsa_keygen_bits:2048 &&
+        openssl req -new -key /certs/mysql.key -out /certs/mysql.csr -subj "/CN=mysql/O=myorg/C=US" &&
+        openssl x509 -req -in /certs/mysql.csr -signkey /certs/mysql.key -out /certs/mysql.crt -days 365 &&
+        # Generate a key and certificate for CA
+        openssl genpkey -algorithm RSA -out /certs/ca.key -pkeyopt rsa_keygen_bits:2048 &&
+        openssl req -new -x509 -key /certs/ca.key -out /certs/ca.crt -days 1095 -subj "/CN=Certificate Authority/O=myorg/C=US" &&
+        chmod 600 /certs/* &&
+        chown 999:999 /certs/*
+    restart: "no"
+
   mysql-m:
     image: mysql:8.0
     container_name: mysql-m
@@ -10,6 +30,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql-m-data:/var/lib/mysql
+      - ./certs:/etc/mysql/certs  # Connecting certificates
       - ./master-init.sql:/docker-entrypoint-initdb.d/master-init.sql
       - ./config/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
@@ -25,8 +46,9 @@ services:
       - "3307:3306"
     volumes:
       - mysql-s1-data:/var/lib/mysql
+      - ./certs:/etc/mysql/certs  # Connecting certificates
 #      - ./slave-init.sql:/docker-entrypoint-initdb.d/slave-init.sql
-      - ./config/my-slave.cnf:/etc/mysql/conf.d/my.cnf
+      - ./config/my-slave-1.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - mysql-cluster
     depends_on:
@@ -47,8 +69,9 @@ services:
       - "3308:3306"
     volumes:
       - mysql-s2-data:/var/lib/mysql
+      - ./certs:/etc/mysql/certs  # Connecting certificates
 #      - ./slave-init.sql:/docker-entrypoint-initdb.d/slave-init.sql
-      - ./config/my-slave.cnf:/etc/mysql/conf.d/my.cnf
+      - ./config/my-slave-2.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - mysql-cluster
     depends_on:

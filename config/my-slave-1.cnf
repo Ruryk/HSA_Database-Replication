@@ -1,5 +1,7 @@
 [mysqld]
-server-id=1
+server-id=2
 ssl-ca=/etc/mysql/certs/ca.crt
 ssl-cert=/etc/mysql/certs/mysql.crt
 ssl-key=/etc/mysql/certs/mysql.key
+relay-log=relay-bin
+relay-log-index=relay-bin.index
